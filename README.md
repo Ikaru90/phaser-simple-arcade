@@ -1,3 +1,3 @@
-# Phaser boilerplate
+# Phaser simple arcade
 
-## npm install & npm run start/build
+## npm install & npm run start
