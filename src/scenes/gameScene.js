@@ -4,7 +4,7 @@ import { Enemy } from '../objects/enemy';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
-    super({ key: 'GameScene' })
+    super({ key: 'GameScene' });
     this.player;
     this.bullets;
     this.keyboard;
@@ -71,8 +71,8 @@ export class GameScene extends Phaser.Scene {
         this.score = 0;
         this.spawnEnemyTimer.remove();
         this.scene.restart();
-      }, 1500)
-    })
+      }, 1500);
+    });
   }
 
   update() {

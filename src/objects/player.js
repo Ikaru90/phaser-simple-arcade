@@ -9,7 +9,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setImmovable(true);
     this.scene = scene;
     this.angle = 90;
-    this.canFire = true;    
+    this.canFire = true;
   }
 
   init() {
@@ -24,8 +24,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           this.scene.bullets.add(new Bullet(this.scene, this.x, this.y));
           setTimeout(() => {
             this.canFire = true;
-          }, 1000)
-        } 
+          }, 1000);
+        }
       }
       if (this.scene.keyboard.a.isDown || this.scene.keyboard.left.isDown) {
         this.setVelocityX(-200);
@@ -37,7 +37,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         && this.scene.keyboard.d.isUp
         && this.scene.keyboard.left.isUp
         && this.scene.keyboard.right.isUp) {
-          this.setVelocityX(0);
+        this.setVelocityX(0);
       }
     }
   }
