@@ -1,13 +1,17 @@
-export class Player {
+export class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene) {
+    super(scene, 500, 750, 'playerSprite');
+    scene.sys.updateList.add(this);
+    scene.sys.displayList.add(this);
+    scene.physics.world.enableBody(this);
+    this.setImmovable(true);
     this.scene = scene;
-    this.scene.playerSprite = this.scene.physics.add.sprite(500, 750, 'playerSprite');
-    this.scene.playerSprite.angle = 90;
-    this.canFire = true;
+    this.angle = 90;
+    this.canFire = true;    
   }
 
   init() {
-    if (this.scene.playerSprite.active) {
+    if (this.active) {
       this.scene.score += 1;
       this.scene.scoreText.setText(this.scene.score);
 
@@ -15,10 +19,10 @@ export class Player {
 
         if (this.canFire) {
           this.canFire = false;
-          this.scene.fires.add(
+          this.scene.bullets.add(
             this.scene.physics.add.sprite(
-              this.scene.playerSprite.x,
-              this.scene.playerSprite.y,
+              this.x,
+              this.y,
               'bullet'
             )
           );
@@ -28,13 +32,13 @@ export class Player {
         } 
       }
       if (this.scene.keyboard.A.isDown) {
-        this.scene.playerSprite.setVelocityX(-200);
+        this.setVelocityX(-200);
       }
       if (this.scene.keyboard.D.isDown) {
-        this.scene.playerSprite.setVelocityX(+200);
+        this.setVelocityX(+200);
       }
       if (this.scene.keyboard.A.isUp && this.scene.keyboard.D.isUp) {
-        this.scene.playerSprite.setVelocityX(0);
+        this.setVelocityX(0);
       }
     }
   }

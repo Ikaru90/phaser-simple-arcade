@@ -3,11 +3,11 @@ import { Player } from './player';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
-    super({key: 'GameScene'})
+    super({ key: 'GameScene' })
     this.player;
-    this.fires;
+    this.bullets;
     this.keyboard;
-    this.enemyShips;
+    this.enemys;
     this.score = 0;
     this.scoreText;
     this.bestScore = 0;
@@ -17,11 +17,11 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet('boom', 'explosion.png', { frameWidth: 64, frameHeight: 64, endFrame: 23 });
-    this.load.image('playerSprite', 'ship1.png');
-    this.load.image('enemyShip', 'ship2.png');
-    this.load.image('bullet', 'bullet.png');
-    this.load.image('dark', 'dark.png');
+    this.load.spritesheet('boom', './assets/explosion.png', { frameWidth: 64, frameHeight: 64, endFrame: 23 });
+    this.load.image('playerSprite', './assets/ship1.png');
+    this.load.image('enemyShip', './assets/ship2.png');
+    this.load.image('bullet', './assets/bullet.png');
+    this.load.image('dark', './assets/dark.png');
   }
 
   create() {
@@ -37,10 +37,10 @@ export class GameScene extends Phaser.Scene {
 
     this.player = new Player(this);
 
-    this.enemyShips = this.physics.add.group();
-    this.fires = this.physics.add.group();
+    this.enemys = this.physics.add.group();
+    this.bullets = this.physics.add.group();
 
-    this.enemyShips.add(this.physics.add.sprite(500, -50, 'enemyShip'));
+    this.enemys.add(this.physics.add.sprite(500, -50, 'enemyShip'));
     this.add.text(0, 0, 'SCORE: ', {fontSize: 50});
     this.scoreText = this.add.text(200, 0, this.score, {fontSize: 50});
     this.bestScoreText = this.add.text(550, 0, 'BEST SCORE: ', {fontSize: 50});
@@ -50,22 +50,22 @@ export class GameScene extends Phaser.Scene {
     this.keyboard = this.input.keyboard.addKeys('A, D, SPACE');
 
     this.spawnEnemyTimer = setInterval(() => {
-      this.enemyShips.add(this.physics.add.sprite(Math.floor(Math.random() * 1024), -50, 'enemyShip'));
+      this.enemys.add(this.physics.add.sprite(Math.floor(Math.random() * 1024), -50, 'enemyShip'));
     }, 500)
 
-    this.physics.world.addCollider(this.fires, this.enemyShips, (fire, enemyShip) => {
-      fire.destroy();
+    this.physics.world.addCollider(this.bullets, this.enemys, (bullet, enemyShip) => {
+      bullet.destroy();
       enemyShip.destroy();
-      this.add.sprite(fire.x, fire.y, 'boom').play('explode');
+      this.add.sprite(bullet.x, bullet.y, 'boom').play('explode');
     });
-    this.physics.world.addCollider(this.playerSprite, this.enemyShips, (playerSprite, enemyShip) => {
+    this.physics.world.addCollider(this.player, this.enemys, (player, enemyShip) => {
       if (this.bestScore < this.score) {
         this.bestScore = this.score;
         this.bestScoreTextValue.setText(this.bestScore);
       }
-      playerSprite.destroy();
+      player.destroy();
       enemyShip.destroy();
-      this.add.sprite(this.playerSprite.x, this.playerSprite.y, 'boom').play('explode');
+      this.add.sprite(this.player.x, this.player.y, 'boom').play('explode');
       setTimeout(() => {
         this.score = 0;
         clearTimeout(this.spawnEnemyTimer);
@@ -82,21 +82,21 @@ export class GameScene extends Phaser.Scene {
       this.bestScoreTextValue.visible = true;
     }
 
-    for(let i = 0; i < this.enemyShips.getChildren().length; i++){
-      this.enemyShips.getChildren()[i].angle = 270;
-      this.enemyShips.getChildren()[i].setVelocityY(500)
-      if (this.enemyShips.getChildren()[i].y > 850) {
-        this.enemyShips.getChildren()[i].setY(-50);
-        this.enemyShips.getChildren()[i].setX(Math.floor(Math.random() * 1024));
+    for(let i = 0; i < this.enemys.getChildren().length; i++){
+      this.enemys.getChildren()[i].angle = 270;
+      this.enemys.getChildren()[i].setVelocityY(500)
+      if (this.enemys.getChildren()[i].y > 850) {
+        this.enemys.getChildren()[i].setY(-50);
+        this.enemys.getChildren()[i].setX(Math.floor(Math.random() * 1024));
       }
     }
 
-    for(let i = 0; i < this.fires.getChildren().length; i++){
-      this.fires.getChildren()[i].setVelocityY(-1000);
-      this.fires.getChildren()[i].angle = 270;
-      this.fires.getChildren()[i].setScale(0.2);
-      if (this.fires.getChildren()[i].y < 0) {
-        this.fires.getChildren()[i].destroy();
+    for(let i = 0; i < this.bullets.getChildren().length; i++){
+      this.bullets.getChildren()[i].setVelocityY(-1000);
+      this.bullets.getChildren()[i].angle = 270;
+      this.bullets.getChildren()[i].setScale(0.2);
+      if (this.bullets.getChildren()[i].y < 0) {
+        this.bullets.getChildren()[i].destroy();
       }
     }
   }
